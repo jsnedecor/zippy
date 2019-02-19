@@ -9,6 +9,7 @@ from functools import wraps
 from abc import ABCMeta, abstractmethod
 import itertools
 import numpy
+import uuid
 
 from .utils import sub_check_wilds
 from pyflow import WorkflowRunner
@@ -724,7 +725,7 @@ class StarRunner(ModularRunner):
             fastq = self.collect_input(sample, 'fastq')
             dependencies = self.collect_dependencies(sample)   
             star_wf = SingleStarFlow(self.params.star_path, self.params.samtools_path, self.params.star_index, sample.name, fastq, self.params.self.output_dir, 
-                                 max_job_cores=cores, tmp_path=os.path.join(self.params.scratch_path, 'star{}'.format(sample.name)),  command_args=args)
+                                 max_job_cores=cores, tmp_path=os.path.join(self.params.scratch_path, 'star{}_{}'.format(sample.name, str(uuid.uuid4()))),  command_args=args)
             self.task[sample].append(workflowRunner.addWorkflowTask('star_{}_{}'.format(self.identifier, sample.id), star_wf, dependencies=dependencies))
 
 
